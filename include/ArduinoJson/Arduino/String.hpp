@@ -13,10 +13,12 @@
 // This class reproduces Arduino's String class
 class String : public std::string {
  public:
-  String(const char *cstr = "") : std::string(cstr) {}
-  String(const String &str) : std::string(str) {}
+  String(const char* cstr = "") : std::string(cstr) {}
+  String(const String& str) : std::string(str) {}
   explicit String(long);
   explicit String(double, unsigned char decimalPlaces = 2);
+
+  using String::operator=;
 };
 
 #else

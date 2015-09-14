@@ -198,3 +198,11 @@ TEST_F(ArduinoStringTests, JsonObject_PrettyPrintTo) {
   object.prettyPrintTo(json);
   ASSERT_EQ(String("{\r\n  \"key\": \"value\"\r\n}"), json);
 }
+
+TEST_F(ArduinoStringTests, JsonVariant_ToString) {
+  JsonVariant variant = "hello";
+  String str = variant;
+  ASSERT_STREQ(str.c_str(), "hello");
+  str = variant;
+  ASSERT_STREQ(str.c_str(), "hello");
+}
