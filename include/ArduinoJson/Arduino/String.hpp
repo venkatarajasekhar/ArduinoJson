@@ -18,7 +18,7 @@ class String : public std::string {
   explicit String(long);
   explicit String(double, unsigned char decimalPlaces = 2);
 
-  using String::operator=;
+  using std::string::operator=;
 };
 
 #else
