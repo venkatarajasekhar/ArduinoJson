@@ -18,7 +18,14 @@ class String : public std::string {
   explicit String(long);
   explicit String(double, unsigned char decimalPlaces = 2);
 
-  using std::string::operator=;
+  String& operator=(const String& rhs) {
+    std::string::operator=(rhs);
+    return *this;
+  }
+  String& operator=(const char* cstr) {
+    std::string::operator=(cstr);
+    return *this;
+  }
 };
 
 #else
