@@ -145,6 +145,18 @@ TEST_F(JsonArray_Container_Tests, CanCreateNestedObjects) {
   secondMustReference(innerObject2);
 }
 
+TEST_F(JsonArray_Container_Tests, CanStoreElementsFromAnArray) {
+  JsonArray& arr = _jsonBuffer.createArray();
+  arr.add(42);
+  arr.add("hello");
+
+  _array.add(arr[1]);
+  _array.add(arr[0]);
+
+  firstMustEqual("hello");
+  secondMustEqual(42);
+}
+
 TEST_F(JsonArray_Container_Tests, RemoveFirstElement) {
   _array.add("one");
   _array.add("two");
