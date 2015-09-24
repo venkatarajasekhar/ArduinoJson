@@ -157,7 +157,7 @@ TEST_F(JsonArray_Container_Tests, CanAddElementsFromAnArray) {
   secondMustEqual(42);
 }
 
-/*TEST_F(JsonArray_Container_Tests, CanSetToElementsFromAnArray) {
+TEST_F(JsonArray_Container_Tests, CanSetToElementsFromAnArray) {
   _array.add(0);
   _array.add(0);
 
@@ -171,7 +171,7 @@ TEST_F(JsonArray_Container_Tests, CanAddElementsFromAnArray) {
   firstMustEqual("hello");
   secondMustEqual(42);
 }
-*/
+
 TEST_F(JsonArray_Container_Tests, RemoveFirstElement) {
   _array.add("one");
   _array.add("two");
