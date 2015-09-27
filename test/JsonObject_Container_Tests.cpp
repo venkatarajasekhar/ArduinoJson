@@ -144,3 +144,39 @@ TEST_F(JsonObject_Container_Tests, CanSetToElementsFromArray) {
   EXPECT_EQ(42, _object["a"]);
   EXPECT_EQ("hello", _object["b"]);
 }
+
+TEST_F(JsonObject_Container_Tests, CanSetToElementsFromObject) {
+  JsonObject& obj = _jsonBuffer.createObject();
+  obj.set("x", 42);
+  obj.set("y", "hello");
+
+  _object.set("a", obj["x"]);
+  _object.set("b", obj["y"]);
+
+  EXPECT_EQ(42, _object["a"]);
+  EXPECT_EQ("hello", _object["b"]);
+}
+
+TEST_F(JsonObject_Container_Tests, CanAssignToElementsFromArray) {
+  JsonArray& arr = _jsonBuffer.createArray();
+  arr.add(42);
+  arr.add("hello");
+
+  _object["a"] = arr[0];
+  _object["b"] = arr[1];
+
+  EXPECT_EQ(42, _object["a"]);
+  EXPECT_EQ("hello", _object["b"]);
+}
+
+TEST_F(JsonObject_Container_Tests, CanAssignToElementsFromObject) {
+  JsonObject& obj = _jsonBuffer.createObject();
+  obj.set("x", 42);
+  obj.set("y", "hello");
+
+  _object["a"] = obj["x"];
+  _object["b"] = obj["y"];
+
+  EXPECT_EQ(42, _object["a"]);
+  EXPECT_EQ("hello", _object["b"]);
+}

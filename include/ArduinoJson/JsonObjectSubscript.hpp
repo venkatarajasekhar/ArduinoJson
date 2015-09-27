@@ -19,6 +19,11 @@ class JsonObjectSubscript
 
   using JsonSubscriptBase<JsonObjectSubscript<TKey> >::operator=;
 
+  JsonObjectSubscript<TKey>& operator=(const JsonObjectSubscript<TKey>& src) {
+    return JsonSubscriptBase<JsonObjectSubscript<TKey> >::template assign<
+        JsonVariant>(src);
+  }
+
   FORCE_INLINE bool success() const { return _object.containsKey(_key); }
 
   FORCE_INLINE operator JsonVariant() const { return _object.get(_key); }
