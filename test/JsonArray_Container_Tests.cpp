@@ -145,7 +145,7 @@ TEST_F(JsonArray_Container_Tests, CanCreateNestedObjects) {
   secondMustReference(innerObject2);
 }
 
-TEST_F(JsonArray_Container_Tests, CanAddElementsFromAnArray) {
+TEST_F(JsonArray_Container_Tests, CanAddElementsFromArray) {
   JsonArray& arr = _jsonBuffer.createArray();
   arr.add(42);
   arr.add("hello");
@@ -157,14 +157,25 @@ TEST_F(JsonArray_Container_Tests, CanAddElementsFromAnArray) {
   secondMustEqual(42);
 }
 
-TEST_F(JsonArray_Container_Tests, CanSetToElementsFromAnArray) {
-  _array.add(0);
-  _array.add(0);
+TEST_F(JsonArray_Container_Tests, CanAddElementsFromObject) {
+  JsonObject& obj = _jsonBuffer.createObject();
+  obj["a"] = 42;
+  obj["b"] = "hello";
 
+  _array.add(obj["b"]);
+  _array.add(obj["a"]);
+
+  firstMustEqual("hello");
+  secondMustEqual(42);
+}
+
+TEST_F(JsonArray_Container_Tests, CanSetToElementsFromArray) {
   JsonArray& arr = _jsonBuffer.createArray();
   arr.add(42);
   arr.add("hello");
 
+  _array.add(0);
+  _array.add(0);
   _array.set(0, arr[1]);
   _array.set(1, arr[0]);
 
@@ -172,16 +183,43 @@ TEST_F(JsonArray_Container_Tests, CanSetToElementsFromAnArray) {
   secondMustEqual(42);
 }
 
-TEST_F(JsonArray_Container_Tests, CanAssignToElementsFromAnArray) {
-  _array.add(0);
-  _array.add(0);
+TEST_F(JsonArray_Container_Tests, CanSetToElementsFromObject) {
+  JsonObject& obj = _jsonBuffer.createObject();
+  obj["a"] = 42;
+  obj["b"] = "hello";
 
+  _array.add(0);
+  _array.add(0);
+  _array.set(0, obj["b"]);
+  _array.set(1, obj["a"]);
+
+  firstMustEqual("hello");
+  secondMustEqual(42);
+}
+
+TEST_F(JsonArray_Container_Tests, CanAssignToElementsFromArray) {
   JsonArray& arr = _jsonBuffer.createArray();
   arr.add(42);
   arr.add("hello");
 
+  _array.add(0);
+  _array.add(0);
   _array[0] = arr[1];
   _array[1] = arr[0];
+
+  firstMustEqual("hello");
+  secondMustEqual(42);
+}
+
+TEST_F(JsonArray_Container_Tests, CanAssignElementsFromObject) {
+  JsonObject& obj = _jsonBuffer.createObject();
+  obj["a"] = 42;
+  obj["b"] = "hello";
+
+  _array.add(0);
+  _array.add(0);
+  _array[0] = obj["b"];
+  _array[1] = obj["a"];
 
   firstMustEqual("hello");
   secondMustEqual(42);

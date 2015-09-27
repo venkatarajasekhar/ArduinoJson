@@ -71,7 +71,12 @@ class JsonSubscriptBase : public JsonVariantBase<TImpl> {
     return assign<JsonVariant>(value);
   }
 
- private:
+  template <typename T>
+  FORCE_INLINE TImpl& operator=(const T& value) {
+    return assign<JsonVariant>(value);
+  }
+
+ protected:
   template <typename TValue>
   FORCE_INLINE TImpl& assign(TValue value) {
     TImpl* that = static_cast<TImpl*>(this);

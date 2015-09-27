@@ -17,8 +17,7 @@ class JsonArraySubscript : public JsonSubscriptBase<JsonArraySubscript> {
   using JsonSubscriptBase<JsonArraySubscript>::operator=;
 
   JsonArraySubscript& operator=(const JsonArraySubscript& src) {
-    _array.set(_index, src._array.get(src._index));
-    return *this;
+    return assign<JsonVariant>(src);
   }
 
   FORCE_INLINE bool success() const { return _index < _array.size(); }
