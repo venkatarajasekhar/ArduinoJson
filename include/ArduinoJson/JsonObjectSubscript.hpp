@@ -24,6 +24,11 @@ class JsonObjectSubscript
 
   using JsonSubscriptBase<JsonObjectSubscript<TKey> >::operator=;
 
+  JsonObjectSubscript<TKey>& operator=(const JsonObjectSubscript<TKey>& src) {
+    return JsonSubscriptBase<JsonObjectSubscript<TKey> >::template assign<
+        JsonVariant>(src);
+  }
+
   template <typename T>
   JsonObjectSubscript<TKey>& operator=(const T& src) {
     return JsonSubscriptBase<JsonObjectSubscript<TKey> >::template assign<

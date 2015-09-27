@@ -21,6 +21,10 @@ class JsonArraySubscript : public JsonSubscriptBase<JsonArraySubscript> {
 
   using JsonSubscriptBase<JsonArraySubscript>::operator=;
 
+  JsonArraySubscript& operator=(const JsonArraySubscript& src) {
+    return assign<JsonVariant>(src);
+  }
+
   template <typename T>
   JsonArraySubscript& operator=(const T& src) {
     return assign<JsonVariant>(src);
