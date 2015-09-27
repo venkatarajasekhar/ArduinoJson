@@ -166,6 +166,21 @@ TEST_F(JsonArray_Container_Tests, CanSetToElementsFromAnArray) {
   arr.add("hello");
 
   _array.set(0, arr[1]);
+  _array.set(1, arr[0]);
+
+  firstMustEqual("hello");
+  secondMustEqual(42);
+}
+
+TEST_F(JsonArray_Container_Tests, CanAssignToElementsFromAnArray) {
+  _array.add(0);
+  _array.add(0);
+
+  JsonArray& arr = _jsonBuffer.createArray();
+  arr.add(42);
+  arr.add("hello");
+
+  _array[0] = arr[1];
   _array[1] = arr[0];
 
   firstMustEqual("hello");
