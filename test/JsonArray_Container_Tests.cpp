@@ -55,13 +55,9 @@ void JsonArray_Container_Tests::itemMustEqual(int index, const char* expected) {
   EXPECT_STREQ(expected, _array[index].asString());
 }
 
-TEST_F(JsonArray_Container_Tests, SuccessIsTrue) {
-  EXPECT_TRUE(_array.success());
-}
+#define TEST_(name) TEST_F(JsonArray_Container_Tests, name)
 
-TEST_F(JsonArray_Container_Tests, InitialSizeIsZero) { sizeMustBe(0); }
-
-TEST_F(JsonArray_Container_Tests, Grow_WhenValuesAreAdded) {
+TEST_(Grow_WhenValuesAreAdded) {
   _array.add("hello");
   sizeMustBe(1);
 
@@ -69,13 +65,13 @@ TEST_F(JsonArray_Container_Tests, Grow_WhenValuesAreAdded) {
   sizeMustBe(2);
 }
 
-TEST_F(JsonArray_Container_Tests, DontGrow_WhenValuesAreReplaced) {
+TEST_(DontGrow_WhenValuesAreReplaced) {
   _array.add("hello");
   _array[0] = "world";
   sizeMustBe(1);
 }
 
-TEST_F(JsonArray_Container_Tests, CanStoreIntegers) {
+TEST_(CanStoreIntegers) {
   _array.add(123);
   _array.add(456);
 
@@ -83,7 +79,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreIntegers) {
   secondMustEqual(456);
 }
 
-TEST_F(JsonArray_Container_Tests, CanStoreDoubles) {
+TEST_(CanStoreDoubles) {
   _array.add(123.45);
   _array.add(456.78);
 
@@ -91,7 +87,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreDoubles) {
   secondMustEqual(456.78);
 }
 
-TEST_F(JsonArray_Container_Tests, CanStoreBooleans) {
+TEST_(CanStoreBooleans) {
   _array.add(true);
   _array.add(false);
 
@@ -99,7 +95,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreBooleans) {
   secondMustEqual(false);
 }
 
-TEST_F(JsonArray_Container_Tests, CanStoreStrings) {
+TEST_(CanStoreStrings) {
   _array.add("hello");
   _array.add("world");
 
@@ -107,7 +103,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreStrings) {
   secondMustEqual("world");
 }
 
-TEST_F(JsonArray_Container_Tests, CanStoreNestedArrays) {
+TEST_(CanStoreNestedArrays) {
   JsonArray& inner_array1 = _jsonBuffer.createArray();
   JsonArray& inner_array2 = _jsonBuffer.createArray();
 
@@ -118,7 +114,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreNestedArrays) {
   secondMustReference(inner_array2);
 }
 
-TEST_F(JsonArray_Container_Tests, CanStoreNestedObjects) {
+TEST_(CanStoreNestedObjects) {
   JsonObject& innerObject1 = _jsonBuffer.createObject();
   JsonObject& innerObject2 = _jsonBuffer.createObject();
 
@@ -129,7 +125,7 @@ TEST_F(JsonArray_Container_Tests, CanStoreNestedObjects) {
   secondMustReference(innerObject2);
 }
 
-TEST_F(JsonArray_Container_Tests, CanCreateNestedArrays) {
+TEST_(CanCreateNestedArrays) {
   JsonArray& inner_array1 = _array.createNestedArray();
   JsonArray& inner_array2 = _array.createNestedArray();
 
@@ -137,7 +133,7 @@ TEST_F(JsonArray_Container_Tests, CanCreateNestedArrays) {
   secondMustReference(inner_array2);
 }
 
-TEST_F(JsonArray_Container_Tests, CanCreateNestedObjects) {
+TEST_(CanCreateNestedObjects) {
   JsonObject& innerObject1 = _array.createNestedObject();
   JsonObject& innerObject2 = _array.createNestedObject();
 
@@ -145,7 +141,7 @@ TEST_F(JsonArray_Container_Tests, CanCreateNestedObjects) {
   secondMustReference(innerObject2);
 }
 
-TEST_F(JsonArray_Container_Tests, CanAddElementsFromArray) {
+TEST_(CanAddElementsFromArray) {
   JsonArray& arr = _jsonBuffer.createArray();
   arr.add(42);
   arr.add("hello");
@@ -157,7 +153,7 @@ TEST_F(JsonArray_Container_Tests, CanAddElementsFromArray) {
   secondMustEqual(42);
 }
 
-TEST_F(JsonArray_Container_Tests, CanAddElementsFromObject) {
+TEST_(CanAddElementsFromObject) {
   JsonObject& obj = _jsonBuffer.createObject();
   obj["a"] = 42;
   obj["b"] = "hello";
@@ -169,7 +165,7 @@ TEST_F(JsonArray_Container_Tests, CanAddElementsFromObject) {
   secondMustEqual(42);
 }
 
-TEST_F(JsonArray_Container_Tests, CanSetToElementsFromArray) {
+TEST_(CanSetToElementsFromArray) {
   JsonArray& arr = _jsonBuffer.createArray();
   arr.add(42);
   arr.add("hello");
@@ -183,7 +179,7 @@ TEST_F(JsonArray_Container_Tests, CanSetToElementsFromArray) {
   secondMustEqual(42);
 }
 
-TEST_F(JsonArray_Container_Tests, CanSetToElementsFromObject) {
+TEST_(CanSetToElementsFromObject) {
   JsonObject& obj = _jsonBuffer.createObject();
   obj["a"] = 42;
   obj["b"] = "hello";
@@ -197,7 +193,7 @@ TEST_F(JsonArray_Container_Tests, CanSetToElementsFromObject) {
   secondMustEqual(42);
 }
 
-TEST_F(JsonArray_Container_Tests, CanAssignToElementsFromArray) {
+TEST_(CanAssignToElementsFromArray) {
   JsonArray& arr = _jsonBuffer.createArray();
   arr.add(42);
   arr.add("hello");
@@ -211,7 +207,7 @@ TEST_F(JsonArray_Container_Tests, CanAssignToElementsFromArray) {
   secondMustEqual(42);
 }
 
-TEST_F(JsonArray_Container_Tests, CanAssignElementsFromObject) {
+TEST_(CanAssignElementsFromObject) {
   JsonObject& obj = _jsonBuffer.createObject();
   obj["a"] = 42;
   obj["b"] = "hello";
@@ -225,7 +221,7 @@ TEST_F(JsonArray_Container_Tests, CanAssignElementsFromObject) {
   secondMustEqual(42);
 }
 
-TEST_F(JsonArray_Container_Tests, RemoveFirstElement) {
+TEST_(RemoveFirstElement) {
   _array.add("one");
   _array.add("two");
   _array.add("three");
@@ -237,7 +233,7 @@ TEST_F(JsonArray_Container_Tests, RemoveFirstElement) {
   secondMustEqual("three");
 }
 
-TEST_F(JsonArray_Container_Tests, RemoveMiddleElement) {
+TEST_(RemoveMiddleElement) {
   _array.add("one");
   _array.add("two");
   _array.add("three");
@@ -249,7 +245,7 @@ TEST_F(JsonArray_Container_Tests, RemoveMiddleElement) {
   secondMustEqual("three");
 }
 
-TEST_F(JsonArray_Container_Tests, RemoveLastElement) {
+TEST_(RemoveLastElement) {
   _array.add("one");
   _array.add("two");
   _array.add("three");
