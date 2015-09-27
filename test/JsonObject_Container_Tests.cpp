@@ -5,6 +5,7 @@
 // https://github.com/bblanchon/ArduinoJson
 
 #include <gtest/gtest.h>
+#define ARDUINOJSON_ENABLE_STD_STREAM
 #include <ArduinoJson.h>
 
 class JsonObject_Container_Tests : public ::testing::Test {
@@ -130,4 +131,16 @@ TEST_F(JsonObject_Container_Tests, ContainsKeyReturnsFalseForNonExistingKey) {
 TEST_F(JsonObject_Container_Tests, ContainsKeyReturnsTrueForDefinedValue) {
   _object.set("hello", 42);
   EXPECT_TRUE(_object.containsKey("hello"));
+}
+
+TEST_F(JsonObject_Container_Tests, CanSetToElementsFromArray) {
+  JsonArray& arr = _jsonBuffer.createArray();
+  arr.add(42);
+  arr.add("hello");
+
+  _object.set("a", arr[0]);
+  _object.set("b", arr[1]);
+
+  EXPECT_EQ(42, _object["a"]);
+  EXPECT_EQ("hello", _object["b"]);
 }

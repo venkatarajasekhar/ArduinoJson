@@ -71,6 +71,16 @@ TEST_F(ArduinoStringTests, JsonObject_SetKeyValue) {
   ASSERT_STREQ("world", object["hello"]);
 }
 
+TEST_F(ArduinoStringTests, JsonObject_SetToArraySubscripte) {
+  JsonArray &arr = _jsonBuffer.createArray();
+  arr.add("world");
+
+  JsonObject &object = _jsonBuffer.createObject();
+  object.set(String("hello"), arr[0]);
+
+  ASSERT_STREQ("world", object["hello"]);
+}
+
 TEST_F(ArduinoStringTests, JsonObject_Get) {
   char json[] = "{\"key\":\"value\"}";
   const JsonObject &object = _jsonBuffer.parseObject(json);
