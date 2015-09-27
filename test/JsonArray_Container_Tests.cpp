@@ -57,12 +57,6 @@ void JsonArray_Container_Tests::itemMustEqual(int index, const char* expected) {
 
 #define TEST_(name) TEST_F(JsonArray_Container_Tests, name)
 
-TEST_(DontGrow_WhenValuesAreReplaced) {
-  _array.add("hello");
-  _array[0] = "world";
-  sizeMustBe(1);
-}
-
 TEST_(CanSetToElementsFromArray) {
   JsonArray& arr = _jsonBuffer.createArray();
   arr.add(42);
@@ -86,34 +80,6 @@ TEST_(CanSetToElementsFromObject) {
   _array.add(0);
   _array.set(0, obj["b"]);
   _array.set(1, obj["a"]);
-
-  firstMustEqual("hello");
-  secondMustEqual(42);
-}
-
-TEST_(CanAssignToElementsFromArray) {
-  JsonArray& arr = _jsonBuffer.createArray();
-  arr.add(42);
-  arr.add("hello");
-
-  _array.add(0);
-  _array.add(0);
-  _array[0] = arr[1];
-  _array[1] = arr[0];
-
-  firstMustEqual("hello");
-  secondMustEqual(42);
-}
-
-TEST_(CanAssignElementsFromObject) {
-  JsonObject& obj = _jsonBuffer.createObject();
-  obj["a"] = 42;
-  obj["b"] = "hello";
-
-  _array.add(0);
-  _array.add(0);
-  _array[0] = obj["b"];
-  _array[1] = obj["a"];
 
   firstMustEqual("hello");
   secondMustEqual(42);
