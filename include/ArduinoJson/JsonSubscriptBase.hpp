@@ -68,7 +68,7 @@ class JsonSubscriptBase : public JsonVariantBase<TImpl> {
   }
 
   FORCE_INLINE TImpl& operator=(JsonVariant value) {
-    return assign<JsonVariant>(value);
+    return assign<const JsonVariant&>(value);
   }
 
  protected:

@@ -22,12 +22,12 @@ class JsonArraySubscript : public JsonSubscriptBase<JsonArraySubscript> {
   using JsonSubscriptBase<JsonArraySubscript>::operator=;
 
   JsonArraySubscript& operator=(const JsonArraySubscript& src) {
-    return assign<JsonVariant>(src);
+    return assign<const JsonVariant&>(src);
   }
 
   template <typename T>
   JsonArraySubscript& operator=(const T& src) {
-    return assign<JsonVariant>(src);
+    return assign<const JsonVariant&>(src);
   }
 
   FORCE_INLINE bool success() const { return _index < _array.size(); }
