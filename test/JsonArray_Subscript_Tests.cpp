@@ -48,7 +48,7 @@ TEST_(StoreBoolean) {
 
 TEST_(StoreString) {
   _array[0] = "hello";
-  EXPECT_EQ("hello", _array[0].as<const char*>());
+  EXPECT_STREQ("hello", _array[0].as<const char*>());
   EXPECT_TRUE(_array[0].is<const char*>());
   EXPECT_FALSE(_array[0].is<int>());
 }
@@ -79,7 +79,7 @@ TEST_(StoreArraySubscript) {
 
   _array[0] = arr[0];
 
-  EXPECT_EQ("hello", _array[0]);
+  EXPECT_STREQ("hello", _array[0]);
 }
 
 TEST_(StoreObjectSubscript) {
@@ -88,5 +88,5 @@ TEST_(StoreObjectSubscript) {
 
   _array[0] = obj["x"];
 
-  EXPECT_EQ("hello", _array[0]);
+  EXPECT_STREQ("hello", _array[0]);
 }
