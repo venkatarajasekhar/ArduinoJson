@@ -15,25 +15,42 @@
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
+template JsonArray &JsonObject::createArrayAt<const char *>(const char *);
+template JsonArray &JsonObject::createArrayAt<const String &>(const String &);
+
 JsonObject JsonObject::_invalid(NULL);
 
 JsonObject::node_type *JsonObject::getOrCreateNodeAt(JsonObjectKey key) {
+  try{
   node_type *existingNode = getNodeAt(key);
+  }catch(...){
+    
+  }
   if (existingNode) return existingNode;
-
+  try{
   node_type *newNode = addNewNode();
+  }catch(...){
+    
+  }
   return newNode;
 }
 
 template <typename TKey>
-JsonArray &JsonObject::createArrayAt(TKey key) {
+JsonArray& JsonObject<TKey>::createArrayAt(TKey key) {
   if (!_buffer) return JsonArray::invalid();
+  try{
   JsonArray &array = _buffer->createArray();
+  }catch(...){
+    
+  }
+  //Logic needs to be implement using Associate Containers
+  try{
   setNodeAt<TKey, const JsonVariant &>(key, array);
+  }catch(...){
+    
+  }
   return array;
 }
-template JsonArray &JsonObject::createArrayAt<const char *>(const char *);
-template JsonArray &JsonObject::createArrayAt<const String &>(const String &);
 
 template <typename TKey>
 JsonObject &JsonObject::createObjectAt(TKey key) {
@@ -57,15 +74,32 @@ void JsonObject::writeTo(JsonWriter &writer) const {
 
   const node_type *node = _firstNode;
   while (node) {
+    try{
     writer.writeString(node->content.key);
+    }catch(...){
+      
+    }
+    try{
     writer.writeColon();
+    }catch(...){
+      
+    }
+    try{
     node->content.value.writeTo(writer);
-
+    }catch(...){
+      
+    }
     node = node->next;
     if (!node) break;
-
+    try{
     writer.writeComma();
+    }catch(...){
+      
+    }
   }
-
+  try{
   writer.endObject();
+  }catch(...){
+    
+  }
 }
