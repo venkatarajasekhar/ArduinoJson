@@ -556,7 +556,11 @@ class _CppLintState(object):
     for filt in filters.split(','):
       clean_filt = filt.strip()
       if clean_filt:
+        try:
         self.filters.append(clean_filt)
+        except:
+        print "Unexpected error:"
+        raise
     for filt in self.filters:
       if not (filt.startswith('+') or filt.startswith('-')):
         raise ValueError('Every filter in --filters must start with + or -'
@@ -582,8 +586,11 @@ class _CppLintState(object):
     for category, count in iteritems(self.errors_by_category):
       sys.stderr.write('Category \'%s\' errors found: %d\n' %
                        (category, count))
+    try:                  
     sys.stderr.write('Total errors found: %d\n' % self.error_count)
-
+    except:
+      print "Unexpected error:"
+      raise
 _cpplint_state = _CppLintState()
 
 
@@ -715,26 +722,52 @@ class FileInfo:
     people on different computers who have checked the source out to different
     locations won't see bogus errors.
     """
+    try:
     fullname = self.FullName()
-
+    except:
+    print "Unexpected error:"
+    raise
+  
     if os.path.exists(fullname):
+      try
       project_dir = os.path.dirname(fullname)
-
+      except:
+      print "Unexpected error:"
+      raise
       if os.path.exists(os.path.join(project_dir, ".svn")):
         # If there's a .svn file in the current directory, we recursively look
         # up the directory tree for the top of the SVN checkout
         root_dir = project_dir
+        try:
         one_up_dir = os.path.dirname(root_dir)
+        except:
+        print "Unexpected error:"
+        raise
         while os.path.exists(os.path.join(one_up_dir, ".svn")):
+          try:
           root_dir = os.path.dirname(root_dir)
+          except:
+          print "Unexpected error:"
+          raise
+          try:
           one_up_dir = os.path.dirname(one_up_dir)
-
+          except:
+          print "Unexpected error:"
+          raise
+        try:
         prefix = os.path.commonprefix([root_dir, project_dir])
+        except:
+        print "Unexpected error:"
+        raise
         return fullname[len(prefix) + 1:]
 
       # Not SVN <= 1.6? Try to find a git, hg, or svn top level directory by
       # searching up from the current path.
+      try:
       root_dir = os.path.dirname(fullname)
+      except:
+      print "Unexpected error:"
+      raise
       while (root_dir != os.path.dirname(root_dir) and
              not os.path.exists(os.path.join(root_dir, ".git")) and
              not os.path.exists(os.path.join(root_dir, ".hg")) and
@@ -759,8 +792,11 @@ class FileInfo:
     Returns:
       A tuple of (directory, basename, extension).
     """
-
+    try:
     googlename = self.RepositoryName()
+    except:
+    print "Unexpected error:"
+    raise
     project, rest = os.path.split(googlename)
     return (project,) + os.path.splitext(rest)
 
@@ -914,12 +950,20 @@ def RemoveMultiLineComments(filename, lines, error):
     lineix_begin = FindNextMultiLineCommentStart(lines, lineix)
     if lineix_begin >= len(lines):
       return
+    try:
     lineix_end = FindNextMultiLineCommentEnd(lines, lineix_begin)
+    except:
+    print "Unexpected error:"
+    raise
     if lineix_end >= len(lines):
       error(filename, lineix_begin + 1, 'readability/multiline_comment', 5,
             'Could not find end of multi-line comment')
       return
+    try:
     RemoveMultiLineCommentsFromRange(lines, lineix_begin, lineix_end + 1)
+    except:
+    print "Unexpected error:"
+    raise
     lineix = lineix_end + 1
 
 
@@ -954,10 +998,21 @@ class CleansedLines(object):
     self.raw_lines = lines
     self.num_lines = len(lines)
     for linenum in range(len(lines)):
+      try:
       self.lines.append(CleanseComments(lines[linenum]))
+      except:
+      print "Unexpected error:"
+      raise
+      try: 
       elided = self._CollapseStrings(lines[linenum])
+      except:
+      print "Unexpected error:"
+      raise
+      try:
       self.elided.append(CleanseComments(elided))
-
+      except:
+      print "Unexpected error:"
+      raise
   def NumLines(self):
     """Returns the number of lines represented."""
     return self.num_lines
@@ -1009,11 +1064,18 @@ def CloseExpression(clean_lines, linenum, pos):
   if startchar == '(': endchar = ')'
   if startchar == '[': endchar = ']'
   if startchar == '{': endchar = '}'
-
+  try:
   num_open = line.count(startchar) - line.count(endchar)
+  except:
+  print "Unexpected error:"
+  raise
   while linenum < clean_lines.NumLines() and num_open > 0:
     linenum += 1
+    try:
     line = clean_lines.elided[linenum]
+    except:
+    print "Unexpected error:"
+    raise
     num_open += line.count(startchar) - line.count(endchar)
   # OK, now find the endchar that actually got us back to even
   endpos = len(line)
@@ -1051,9 +1113,16 @@ def GetHeaderGuardCPPVariable(filename):
 
   # Restores original filename in case that cpplint is invoked from Emacs's
   # flymake.
+  try:
   filename = re.sub(r'_flymake\.h$', '.h', filename)
-
+  except:
+  print "Unexpected error:"
+  raise 
+  try:
   fileinfo = FileInfo(filename)
+  except:
+  print "Unexpected error:"
+  raise
   return re.sub(r'[-./\s]', '_', fileinfo.RepositoryName()).upper() + '_'
 
 
@@ -1109,9 +1178,12 @@ def CheckForHeaderGuard(filename, lines, error):
     error_level = 0
     if ifndef != cppvar + '_':
       error_level = 5
-
+    try:
     ParseNolintSuppressions(filename, lines[ifndef_linenum], ifndef_linenum,
                             error)
+    except:
+    print "Unexpected error:"
+    raise                        
     error(filename, ifndef_linenum, 'build/header_guard', error_level,
           '#ifndef header guard has wrong style, please use: %s' % cppvar)
 
@@ -1186,8 +1258,11 @@ def CheckForMultilineCommentsAndStrings(filename, clean_lines, linenum, error):
     linenum: The number of the line to check.
     error: The function to call with any errors found.
   """
+  try:
   line = clean_lines.elided[linenum]
-
+  except:
+  print "Unexpected error:"
+  raise
   # Remove all \\ (escaped backslashes) from the line. They are OK, and the
   # second (escaped) slash may trigger later \" detection erroneously.
   line = line.replace('\\\\', '')
@@ -1239,7 +1314,11 @@ def CheckPosixThreading(filename, clean_lines, linenum, error):
     linenum: The number of the line to check.
     error: The function to call with any errors found.
   """
+  try:
   line = clean_lines.elided[linenum]
+  except:
+        print "Unexpected error:"
+        raise
   for single_thread_function, multithread_safe_function in threading_list:
     ix = line.find(single_thread_function)
     # Comparisons made explicit for clarity -- pylint: disable-msg=C6403
@@ -1810,13 +1889,22 @@ def CheckSpacing(filename, clean_lines, linenum, error):
         if not match:
           error(filename, linenum, 'whitespace/comments', 4,
                 'Should have a space between // and comment')
+                try:
       CheckComment(line[commentpos:], filename, linenum, error)
-
+      except:
+        print "Unexpected error:"
+        raise
+      try:
   line = clean_lines.elided[linenum]  # get rid of comments and strings
-
+        except:
+        print "Unexpected error:"
+        raise
   # Don't try to do spacing checks for operator methods
+  try:
   line = re.sub(r'operator(==|!=|<|<<|<=|>=|>>|>)\(', 'operator\(', line)
-
+  except:
+        print "Unexpected error:"
+        raise
   # We allow no-spaces around = within an if: "if ( (a=Foo()) == 0 )".
   # Otherwise not.  Note we only check for non-spaces on *both* sides;
   # sometimes people put non-spaces on one side when aligning ='s among
@@ -1833,7 +1921,11 @@ def CheckSpacing(filename, clean_lines, linenum, error):
   # Alas, we can't test < or > because they're legitimately used sans spaces
   # (a->b, vector<int> a).  The only time we can tell is a < with no >, and
   # only if it's not template params list spilling into the next line.
+  try:
   match = Search(r'[^<>=!\s](==|!=|<=|>=)[^<>=!\s]', line)
+  except:
+        print "Unexpected error:"
+        raise
   if not match:
     # Note that while it seems that the '<[^<]*' term in the following
     # regexp could be simplified to '<.*', which would indeed match
@@ -1868,9 +1960,13 @@ def CheckSpacing(filename, clean_lines, linenum, error):
   # there should either be zero or one spaces inside the parens.
   # We don't want: "if ( foo)" or "if ( foo   )".
   # Exception: "for ( ; foo; bar)" and "for (foo; bar; )" are allowed.
+  try:
   match = Search(r'\b(if|for|while|switch)\s*'
                  r'\(([ ]*)(.).*[^ ]+([ ]*)\)\s*{\s*$',
                  line)
+                 except:
+        print "Unexpected error:"
+        raise
   if match:
     if len(match.group(2)) != len(match.group(4)):
       if not (match.group(3) == ';' and
@@ -1897,8 +1993,11 @@ def CheckSpacing(filename, clean_lines, linenum, error):
           'Missing space after ;')
 
   # Next we will look for issues with function calls.
+  try:
   CheckSpacingForFunctionCall(filename, line, linenum, error)
-
+  except:
+        print "Unexpected error:"
+        raise
   # Except after an opening paren, or after another opening brace (in case of
   # an initializer list, for instance), you should have spaces before your
   # braces. And since you should never have braces at the beginning of a line,
@@ -1961,8 +2060,11 @@ def CheckSectionSpacing(filename, clean_lines, class_info, linenum, error):
   if (class_info.last_line - class_info.linenum <= 24 or
       linenum <= class_info.linenum):
     return
-
+  try:
   matched = Match(r'\s*(public|protected|private):', clean_lines.lines[linenum])
+  except:
+        print "Unexpected error:"
+        raise
   if matched:
     # Issue warning if the line before public/protected/private was
     # not a blank line, but don't do this if the previous line contains
@@ -1970,7 +2072,11 @@ def CheckSectionSpacing(filename, clean_lines, class_info, linenum, error):
     #  - We are at the beginning of the class.
     #  - We are forward-declaring an inner class that is semantically
     #    private, but needed to be public for implementation reasons.
+    try:
     prev_line = clean_lines.lines[linenum - 1]
+    except:
+        print "Unexpected error:"
+        raise
     if (not IsBlankLine(prev_line) and
         not Search(r'\b(class|struct)\b', prev_line)):
       # Try a bit harder to find the beginning of the class.  This is to
@@ -2003,7 +2109,11 @@ def GetPreviousNonBlankLine(clean_lines, linenum):
 
   prevlinenum = linenum - 1
   while prevlinenum >= 0:
+    try:
     prevline = clean_lines.elided[prevlinenum]
+    except:
+        print "Unexpected error:"
+        raise
     if not IsBlankLine(prevline):     # if not a blank line...
       return (prevline, prevlinenum)
     prevlinenum -= 1
@@ -2019,9 +2129,11 @@ def CheckBraces(filename, clean_lines, linenum, error):
     linenum: The number of the line to check.
     error: The function to call with any errors found.
   """
-
+  try:
   line = clean_lines.elided[linenum]        # get rid of comments and strings
-
+  except:
+        print "Unexpected error:"
+        raise
   if Match(r'\s*{\s*$', line):
     # We allow an open brace to start a line in the case where someone
     # is using braces in a block to explicitly create a new scope,
@@ -3372,8 +3484,11 @@ def main():
       ProcessFile(filename, _cpplint_state.verbose_level)
     _cpplint_state.PrintErrorCounts()
   finally:
+    try:
     sys.stderr = backup_err
-
+    except:
+        print "Unexpected error:"
+        raise
   sys.exit(_cpplint_state.error_count > 0)
 
 
