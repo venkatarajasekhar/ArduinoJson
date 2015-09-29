@@ -17,7 +17,7 @@ using namespace ArduinoJson::Internals;
 namespace ArduinoJson {
 
 template <>
-const char *JsonVariant::as<const char *>() const {
+const char *JsonVariant<>::as<const char *>() const {
   if (_type == JSON_UNPARSED && _content.asString &&
       !strcmp("null", _content.asString))
     return NULL;
@@ -26,7 +26,7 @@ const char *JsonVariant::as<const char *>() const {
 }
 
 template <>
-double JsonVariant::as<double>() const {
+double JsonVariant<>::as<double>() const {
   if (_type >= JSON_DOUBLE_0_DECIMALS) return _content.asDouble;
 
   if (_type == JSON_LONG || _type == JSON_BOOLEAN)
@@ -39,7 +39,7 @@ double JsonVariant::as<double>() const {
 }
 
 template <>
-long JsonVariant::as<long>() const {
+long JsonVariant<>::as<long>() const {
   if (_type == JSON_LONG || _type == JSON_BOOLEAN) return _content.asLong;
 
   if (_type >= JSON_DOUBLE_0_DECIMALS)
@@ -54,7 +54,7 @@ long JsonVariant::as<long>() const {
 }
 
 template <>
-String JsonVariant::as<String>() const {
+String JsonVariant<>::as<String>() const {
   if ((_type == JSON_STRING || _type == JSON_UNPARSED) &&
       _content.asString != NULL)
     return String(_content.asString);
@@ -66,19 +66,22 @@ String JsonVariant::as<String>() const {
     uint8_t decimals = static_cast<uint8_t>(_type - JSON_DOUBLE_0_DECIMALS);
     return String(_content.asDouble, decimals);
   }
-
+  try{
   String s;
+  }catch(...){
+    
+  }
   printTo(s);
   return s;
 }
 
 template <>
-bool JsonVariant::is<signed long>() const {
+bool JsonVariant<>::is<signed long>() const {
   if (_type == JSON_LONG) return true;
 
   if (_type != JSON_UNPARSED || _content.asString == NULL) return false;
 
-  char *end;
+  char *end = NULL;
   errno = 0;
   strtol(_content.asString, &end, 10);
 
@@ -86,19 +89,19 @@ bool JsonVariant::is<signed long>() const {
 }
 
 template <>
-bool JsonVariant::is<double>() const {
+bool JsonVariant<>::is<double>() const {
   if (_type >= JSON_DOUBLE_0_DECIMALS) return true;
 
   if (_type != JSON_UNPARSED || _content.asString == NULL) return false;
 
-  char *end;
+  char *end = NULL;
   errno = 0;
   strtod(_content.asString, &end);
 
   return *end == '\0' && errno == 0 && !is<long>();
 }
 
-void JsonVariant::writeTo(JsonWriter &writer) const {
+void JsonVariant<>::writeTo(JsonWriter &writer) const {
   if (_type == JSON_ARRAY)
     _content.asArray->writeTo(writer);
 
@@ -106,20 +109,36 @@ void JsonVariant::writeTo(JsonWriter &writer) const {
     _content.asObject->writeTo(writer);
 
   else if (_type == JSON_STRING)
+    try{
     writer.writeString(_content.asString);
-
+    }catch(...){
+      
+    }
   else if (_type == JSON_UNPARSED)
+    try{
     writer.writeRaw(_content.asString);
-
+    }catch(...){
+      
+    }
   else if (_type == JSON_LONG)
+    try{
     writer.writeLong(_content.asLong);
-
+    }catch(...){
+      
+    }
   else if (_type == JSON_BOOLEAN)
+    try{ 
     writer.writeBoolean(_content.asLong != 0);
-
+    }catch(...){
+      
+    }
   else if (_type >= JSON_DOUBLE_0_DECIMALS) {
     uint8_t decimals = static_cast<uint8_t>(_type - JSON_DOUBLE_0_DECIMALS);
+    try{
     writer.writeDouble(_content.asDouble, decimals);
+    }catch(...){
+      
+    }
   }
 }
 }
