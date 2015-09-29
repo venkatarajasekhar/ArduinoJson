@@ -14,24 +14,63 @@ using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
 JsonArray &JsonBuffer::createArray() {
-  JsonArray *ptr = new (this) JsonArray(this);
-  return ptr ? *ptr : JsonArray::invalid();
+  try{
+  JsonArray *ptr = new JsonArray;
+  }catch(...){
+    
+  }
+  return ptr ? *ptr : try{
+    JsonArray::invalid();
+  }catch(...){
+    
+  }
 }
 
 JsonObject &JsonBuffer::createObject() {
-  JsonObject *ptr = new (this) JsonObject(this);
-  return ptr ? *ptr : JsonObject::invalid();
+  try{
+  JsonObject *ptr = new JsonObject;
+  }catch(...){
+    
+  }
+  return ptr ? *ptr : try{
+    JsonObject::invalid();
+  }catch(...){
+    
+  }
 }
 
 JsonArray &JsonBuffer::parseArray(char *json, uint8_t nestingLimit) {
+  if(json){
+    try{
   JsonParser parser(this, json, nestingLimit);
-  return parser.parseArray();
+    }catch(...){
+      
+    }
+  return try{
+    parser.parseArray();
+  }catch(...){
+    
+  }
+  } //if closed
+  //Logic need to be Implement
 }
 
 JsonObject &JsonBuffer::parseObject(char *json, uint8_t nestingLimit) {
+  if(json){
+    try{
   JsonParser parser(this, json, nestingLimit);
-  return parser.parseObject();
-}
+    }catch(...){
+    }
+  return 
+  try{
+  parser.parseObject();
+  }catch(...){
+    
+  }
+}//if closed 
+//Logic need to be implement
+} 
+
 
 char *JsonBuffer::strdup(const char *source, size_t length) {
   size_t size = length + 1;
