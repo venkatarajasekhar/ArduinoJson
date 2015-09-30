@@ -10,3 +10,4 @@
 // _escapeTable[2*i+1] => the special char
 // _escapeTable[2*i] => the char to use instead
 const char ArduinoJson::Internals::Encoding::_escapeTable[] = "\"\"\\\\b\bf\fn\nr\rt\t";
+vector <const char> v_escapeTable(ArduinoJson::Internals::Encoding::_escapeTable[]);
