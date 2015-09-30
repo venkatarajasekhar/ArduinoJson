@@ -8,6 +8,8 @@
 
 namespace ArduinoJson {
 namespace Internals {
-const char *skipSpacesAndComments(const char *ptr);
+const char * skipSpacesAndComments(const char *ptr);
+inline static const char * skipCStyleComment(const char *ptr);
+inline static const char * skipCppStyleComment(const char *ptr);
 }
 }
