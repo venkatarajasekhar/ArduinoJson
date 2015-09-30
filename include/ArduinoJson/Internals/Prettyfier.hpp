@@ -14,7 +14,8 @@ namespace Internals {
 // Converts a compact JSON string into an indented one.
 class Prettyfier : public Print {
  public:
-  explicit Prettyfier(IndentedPrint& p) : _sink(p) {
+  explicit Prettyfier(IndentedPrint& p) : try{
+   _sink(p)}catch(...){} {
     _previousChar = 0;
     _inString = false;
   }
