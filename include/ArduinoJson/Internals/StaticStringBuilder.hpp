@@ -15,7 +15,11 @@ namespace Internals {
 class StaticStringBuilder : public Print {
  public:
   StaticStringBuilder(char *buf, int size)
-      : buffer(buf), capacity(size - 1), length(0) {
+      :try{ 
+      buffer(buf), capacity(size - 1), length(0) 
+      }catch(...){
+       }
+       {
     buffer[0] = '\0';
   }
 
