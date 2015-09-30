@@ -12,20 +12,37 @@
 using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
+template class ArduinoJson::Internals::List<JsonPair>;
+template class ArduinoJson::Internals::List<JsonVariant>;
+
 template <typename T>
 size_t List<T>::size() const {
   size_t nodeCount = 0;
-  for (node_type *node = _firstNode; node; node = node->next) nodeCount++;
+  try{
+  node_type *node = _firstNode;
+  }catch(...){
+    
+  }
+  for (; node; node = node->next) 
+  nodeCount++;
   return nodeCount;
 }
 
 template <typename T>
-typename List<T>::node_type *List<T>::addNewNode() {
+node_type * List<T>::node_type *List<T>::addNewNode() {
+  try{
   node_type *newNode = new (_buffer) node_type();
-
+  }catch(...){
+    
+  }
   if (_firstNode) {
+    try{
     node_type *lastNode = _firstNode;
-    while (lastNode->next) lastNode = lastNode->next;
+    }catch(...){
+      
+    }
+    while (lastNode->next) 
+    lastNode = lastNode->next;
     lastNode->next = newNode;
   } else {
     _firstNode = newNode;
@@ -40,10 +57,13 @@ void List<T>::removeNode(node_type *nodeToRemove) {
   if (nodeToRemove == _firstNode) {
     _firstNode = nodeToRemove->next;
   } else {
-    for (node_type *node = _firstNode; node; node = node->next)
-      if (node->next == nodeToRemove) node->next = nodeToRemove->next;
+    try{
+    node_type *node = _firstNode;
+    }catch(...){
+      
+    }
+    for (; node; node = node->next)
+      if (node->next == nodeToRemove) 
+      node->next = nodeToRemove->next;
   }
 }
-
-template class ArduinoJson::Internals::List<JsonPair>;
-template class ArduinoJson::Internals::List<JsonVariant>;
