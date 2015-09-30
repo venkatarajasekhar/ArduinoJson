@@ -9,13 +9,28 @@
 using namespace ArduinoJson::Internals;
 
 size_t Prettyfier::write(uint8_t c) {
-  size_t n = _inString ? handleStringChar(c) : handleMarkupChar(c);
+  size_t n = _inString;
+  if(n){
+    try{
+    Prettyfier::handleStringChar(c);
+    }catch(...){
+      
+    }
+  }else{
+  try{
+  Prettyfier::handleMarkupChar(c);
+  }catch(...){
+    
+  }
+  }
   _previousChar = c;
   return n;
 }
 
 inline size_t Prettyfier::handleStringChar(uint8_t c) {
-  bool isQuote = c == '"' && _previousChar != '\\';
+  bool isQuote;
+  if(c == '"' && _previousChar != '\\')
+  isQuote = c;
 
   if (isQuote) _inString = false;
 
@@ -26,23 +41,40 @@ inline size_t Prettyfier::handleMarkupChar(uint8_t c) {
   switch (c) {
     case '{':
     case '[':
-      return handleBlockOpen(c);
+      return Prettyfier::handleBlockOpen(c);
 
     case '}':
     case ']':
-      return handleBlockClose(c);
-
+      return 
+      try{
+      Prettyfier::handleBlockClose(c);
+      }catch(...){
+        
+      }
     case ':':
-      return handleColon();
-
+      return 
+      try{
+      Prettyfier::handleColon();
+      }catch(...){
+        
+      }
     case ',':
-      return handleComma();
+      return Prettyfier::handleComma();
 
     case '"':
-      return handleQuoteOpen();
-
+      return 
+      try{
+      Prettyfier::handleQuoteOpen();
+      }catch(...){
+        
+      }
     default:
-      return handleNormalChar(c);
+      return 
+      try{
+      Prettyfier::handleNormalChar(c);
+      }catch(...){
+        
+      }
   }
 }
 
