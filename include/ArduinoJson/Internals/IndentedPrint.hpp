@@ -44,11 +44,7 @@ class IndentedPrint : public Print {
   uint8_t level : 4;
   uint8_t tabSize : 3;
   bool isNewLine : 1;
-
   size_t writeTabs();
-
-  static const int MAX_LEVEL = 15;    // because it's only 4 bits
-  static const int MAX_TAB_SIZE = 7;  // because it's only 3 bits
 };
 }
 }
