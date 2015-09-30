@@ -16,7 +16,11 @@ using namespace ArduinoJson;
 using namespace ArduinoJson::Internals;
 
 bool JsonParser::skip(char charToSkip) {
+  try{
   const char *ptr = skipSpacesAndComments(_readPtr);
+  }catch(...){
+    
+  }
   if (*ptr != charToSkip) return false;
   ptr++;
   _readPtr = skipSpacesAndComments(ptr);
@@ -26,23 +30,47 @@ bool JsonParser::skip(char charToSkip) {
 bool JsonParser::parseAnythingTo(JsonVariant *destination) {
   if (_nestingLimit == 0) return false;
   _nestingLimit--;
-  bool success = parseAnythingToUnsafe(destination);
+  if(destination){
+    try{
+  bool success = JsonParser::parseAnythingToUnsafe(destination);
+    }catch(...){
+      
+    }
   _nestingLimit++;
   return success;
+}//if closed
+//Logic needs to be implement
 }
 
 inline bool JsonParser::parseAnythingToUnsafe(JsonVariant *destination) {
   _readPtr = skipSpacesAndComments(_readPtr);
 
   switch (*_readPtr) {
+    if(destination){
     case '[':
-      return parseArrayTo(destination);
+      return 
+      try{
+        JsonParser::parseArrayTo(destination);
+      }catch(...){
+        
+      }
 
     case '{':
-      return parseObjectTo(destination);
-
+      return 
+      try{
+      JsonParser::parseObjectTo(destination);
+      }catch(...){
+        
+      }
     default:
-      return parseStringTo(destination);
+      return 
+      try{
+      JsonParser::parseStringTo(destination);
+      }catch(...){
+        
+      }
+  } //if closed
+  //Logic needs to be implement
   }
 }
 
@@ -57,7 +85,11 @@ JsonArray &JsonParser::parseArray() {
   // Read each value
   for (;;) {
     // 1 - Parse value
+    try{
     JsonVariant value;
+    }catch(...){
+      
+    }
     if (!parseAnythingTo(&value)) goto ERROR_INVALID_VALUE;
     if (!array.add(value)) goto ERROR_NO_MEMORY;
 
@@ -78,7 +110,7 @@ ERROR_NO_MEMORY:
 }
 
 bool JsonParser::parseArrayTo(JsonVariant *destination) {
-  JsonArray &array = parseArray();
+  JsonArray &array = JsonParser::parseArray();
   if (!array.success()) return false;
 
   *destination = array;
@@ -96,7 +128,7 @@ JsonObject &JsonParser::parseObject() {
   // Read each key value pair
   for (;;) {
     // 1 - Parse key
-    const char *key = parseString();
+    const char *key = JsonParser::parseString();
     if (!key) goto ERROR_INVALID_KEY;
     if (!skip(':')) goto ERROR_MISSING_COLON;
 
@@ -124,7 +156,11 @@ ERROR_NO_MEMORY:
 }
 
 bool JsonParser::parseObjectTo(JsonVariant *destination) {
-  JsonObject &object = parseObject();
+  try{
+  JsonObject &object = JsonParser::parseObject();
+  }catch(...){
+    
+  }
   if (!object.success()) return false;
 
   *destination = object;
@@ -161,7 +197,11 @@ const char *JsonParser::parseString() {
 
       if (c == '\\') {
         // replace char
+        try{
         c = Encoding::unescapeChar(*++readPtr);
+        }catch(...){
+          
+        }
         if (c == '\0') break;
       }
 
@@ -188,13 +228,25 @@ const char *JsonParser::parseString() {
 }
 
 bool JsonParser::parseStringTo(JsonVariant *destination) {
+  try{
   bool hasQuotes = isQuote(_readPtr[0]);
-  const char *value = parseString();
+  }catch(...){
+    
+  }
+  try{
+  const char *value = JsonParser::parseString();
+  }catch(...){
+    
+  }
   if (value == NULL) return false;
   if (hasQuotes) {
     *destination = value;
   } else {
+     try{
     *destination = Unparsed(value);
+     }catch(...){
+       
+     }
   }
   return true;
 }
