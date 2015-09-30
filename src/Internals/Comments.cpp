@@ -6,24 +6,35 @@
 
 #include "../../include/ArduinoJson/Internals/Comments.hpp"
 
-inline static const char *skipCStyleComment(const char *ptr) {
+
+inline static const char * ArduinoJson::Internals::skipCStyleComment(const char *ptr) {
+  if(ptr) {
   ptr += 2;
   for (;;) {
     if (ptr[0] == '\0') return ptr;
     if (ptr[0] == '*' && ptr[1] == '/') return ptr + 2;
     ptr++;
   }
+  } //if closed
+  //Logic needs to be implemented
+  
 }
 
-inline static const char *skipCppStyleComment(const char *ptr) {
+inline static const char * ArduinoJson::Internals::skipCppStyleComment(const char *ptr) {
+  if(ptr){
   ptr += 2;
   for (;;) {
     if (ptr[0] == '\0' || ptr[0] == '\n') return ptr;
     ptr++;
   }
+  } //if closed
+//Logic needs to be implement
+  
 }
 
 const char *ArduinoJson::Internals::skipSpacesAndComments(const char *ptr) {
+  const char *ptrtoSkipSpaces = ptr;
+  if(ptrtoSkipSpaces){
   for (;;) {
     switch (ptr[0]) {
       case ' ':
@@ -31,14 +42,16 @@ const char *ArduinoJson::Internals::skipSpacesAndComments(const char *ptr) {
       case '\r':
       case '\n':
         ptr++;
-        continue;
+        return ptr;
       case '/':
         switch (ptr[1]) {
           case '*':
-            ptr = skipCStyleComment(ptr);
+          const char* ptrtoCstyle = NULL;  
+            ptrtoCstyle = ArduinoJson::Internals::skipCStyleComment(ptr);
             break;
           case '/':
-            ptr = skipCppStyleComment(ptr);
+          const char* ptrtoCppstyle = NULL;
+            ptrtoCppstyle = ArduinoJson::Internals::skipCppStyleComment(ptr);
             break;
           default:
             return ptr;
@@ -48,4 +61,7 @@ const char *ArduinoJson::Internals::skipSpacesAndComments(const char *ptr) {
         return ptr;
     }
   }
+  }// if closed
+  //Logic needs to be implement
+  
 }
