@@ -24,10 +24,17 @@
 #define isinf(x) (!_finite(x))
 #endif
 
-size_t Print::print(const char s[]) {
+size_t Print::write(const char *s) {
+}
+
+size_t Print::print(const char *s) {
   size_t n = 0;
   while (*s) {
-    n += write(*s++);
+      try{
+    n += print::write(*s++);
+      }catch(...){
+          
+      }
   }
   return n;
 }
@@ -38,28 +45,55 @@ size_t Print::print(double value, int digits) {
   if (isinf(value)) return print("inf");
 
   char tmp[32];
-
-  // https://github.com/arduino/Arduino/blob/db8cbf24c99dc930b9ccff1a43d018c81f178535/hardware/arduino/sam/cores/arduino/Print.cpp#L220
-  bool isBigDouble = value > 4294967040.0 || value < -4294967040.0;
-
-  if (isBigDouble) {
+  
+  if ((value>4294967040.0) || (value<-4294967040.0)) {
     // Arduino's implementation prints "ovf"
     // We prefer trying to use scientific notation, since we have sprintf
+    try{
     sprintf(tmp, "%g", value);
+    }catch(...){
+        
+    }
   } else {
     // Here we have the exact same output as Arduino's implementation
-    sprintf(tmp, "%.*f", digits, value);
+   try{
+   sprintf(tmp, "%.*f", digits, value);
+   }catch(...){
+       
+   }
   }
 
-  return print(tmp);
+  return 
+  try{
+      Print::print(tmp);
+  }catch(...){
+      
+  }
 }
 
 size_t Print::print(long value) {
   char tmp[32];
+  try{
   sprintf(tmp, "%ld", value);
-  return print(tmp);
+  }catch(...){
+      
+  }
+  return 
+  try{
+  Print::print(tmp);
+  }catch(...){
+      
+  }
 }
 
-size_t Print::println() { return write('\r') + write('\n'); }
+size_t Print::println() 
+{ 
+    return
+    try{
+write('\r') + write('\n');
+}catch(...){
+    
+}
+}
 
 #endif
